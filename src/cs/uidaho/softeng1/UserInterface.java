@@ -4,7 +4,7 @@
  */
 package cs.uidaho.softeng1;
 
-import edu.uci.ics.jung.algorithms.layout.KKLayout;
+import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.algorithms.layout.util.Relaxer;
 import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
@@ -20,6 +20,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -72,6 +73,7 @@ public class UserInterface {
     private JMenuItem fileMenu_Save;
     //private JMenuItem fileMenu_Open;
     private JMenuItem fileMenu_sessionLog;
+    private JMenuItem fileMenu_help;
     
     
     public UserInterface( DataLogger entry_logger, NetworkDataPayload net_data ){
@@ -128,7 +130,9 @@ public class UserInterface {
     
     private void construcLayout(){
         logger.info(CLASS_NAME, "Constructing Graph Layout");
-        graphLayout = new KKLayout<>(this.netGraph);
+        //graphLayout = new CircleLayout<>(this.netGraph);
+        //graphLayout = new KKLayout<>(this.netGraph);
+        graphLayout = new FRLayout<>(this.netGraph);
         graphLayout.setSize(java.awt.Toolkit.getDefaultToolkit().getScreenSize());
         
          //Graph visualizer
@@ -210,35 +214,35 @@ public class UserInterface {
         JPanel topPanel = new JPanel();
         JPanel utilityPanel = new JPanel(new GridLayout(1, 3, 10, 10));
         
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        bottomPanel.setPreferredSize(new Dimension(this.WIDTH, 100));
-        bottomPanel.setOpaque(true);
+        JPanel sidePanel = new JPanel(new BorderLayout());
+        sidePanel.setPreferredSize(new Dimension(250, this.HEIGHT));
+        sidePanel.setOpaque(true);
         
         // Panel for node information to go in
-        JPanel bottomLeftPanel = new JPanel(new BorderLayout());
-        bottomLeftPanel.setPreferredSize(new Dimension((this.WIDTH)/2, 100));
-        bottomLeftPanel.setOpaque(true);
-        bottomPanel.add(bottomLeftPanel, BorderLayout.WEST);
+        JPanel sideTopPanel = new JPanel(new BorderLayout());
+        sideTopPanel.setPreferredSize(new Dimension(250, 75));
+        sideTopPanel.setOpaque(true);
+        sidePanel.add(sideTopPanel, BorderLayout.NORTH);
         
         JPanel nodeInfoEntry = new JPanel(new BorderLayout());
-        bottomLeftPanel.add(nodeInfoEntry, BorderLayout.NORTH);
+        sideTopPanel.add(nodeInfoEntry, BorderLayout.NORTH);
         
-        JLabel nodeInfo = new JLabel("Enter node number to get info:");
-        nodeInfoEntry.add(nodeInfo, BorderLayout.WEST);
-        bottomLeftPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+        JLabel nodeInfo = new JLabel("Enter node number to get info");
+        nodeInfoEntry.add(nodeInfo, BorderLayout.NORTH);
+        sideTopPanel.setBorder(BorderFactory.createLineBorder(Color.black));
         
         nodeNumber = new JTextField(8);
-        nodeInfoEntry.add(nodeNumber, BorderLayout.EAST);
+        nodeInfoEntry.add(nodeNumber, BorderLayout.CENTER);
         
         JButton getNodeInfo = new JButton("Get Node Info");
-        bottomLeftPanel.add(getNodeInfo, BorderLayout.SOUTH);
+        sideTopPanel.add(getNodeInfo, BorderLayout.SOUTH);
         
         // Panel for other node information to go in
         //JPanel bottomRightPanel = new JPanel(new BorderLayout());
-        JPanel bottomRightPanel = new JPanel(new GridLayout(1,2));
-        bottomRightPanel.setPreferredSize(new Dimension((this.WIDTH)/2, 100));
-        bottomRightPanel.setOpaque(true);
-        bottomRightPanel.setBackground(Color.WHITE);
+        JPanel sideBottomPanel = new JPanel(new BorderLayout());//new GridLayout(2,1));
+        sideBottomPanel.setPreferredSize(new Dimension(250, (this.HEIGHT)/2));
+        sideBottomPanel.setOpaque(true);
+        sideBottomPanel.setBackground(Color.WHITE);
         //bottomRightPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
                
         // Create Overall graph info panel
@@ -254,19 +258,20 @@ public class UserInterface {
         graphInfo.setBackground(Color.WHITE);
         graphInfo.add(graphInfoTextArea);
         graphInfo.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        graphInfo.setPreferredSize(new Dimension(250, 100));
 
+        sidePanel.add(sideBottomPanel);
         
-        //bottomRightPanel.add(graphInfo, BorderLayout.EAST);
-        bottomPanel.add(bottomRightPanel);
-       
-        
-        extraNodeInfo = new JTextArea();
-        extraNodeInfo.setOpaque(true);
+        //setting up text area for node info
+        extraNodeInfo = new JTextArea(5, 25);
         extraNodeInfo.setEditable(false);
-        extraNodeInfo.setBorder(BorderFactory.createLineBorder(Color.black));
-        //bottomRightPanel.add(extraNodeInfo, BorderLayout.WEST);
-        bottomRightPanel.add(extraNodeInfo, BorderLayout.WEST);
-        bottomRightPanel.add(graphInfo);
+        JScrollPane scrollingNodeInfo = new JScrollPane(extraNodeInfo);
+        scrollingNodeInfo.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollingNodeInfo.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        //extraNodeInfo.setBorder(BorderFactory.createLineBorder(Color.black));
+        //bottomRightPanel.add(extraNodeInfo);
+        sideBottomPanel.add(scrollingNodeInfo);
+        sideBottomPanel.add(graphInfo, BorderLayout.SOUTH);
         
         //add buttons and modebox to panel
         topPanel.add(utilityPanel);
@@ -299,7 +304,7 @@ public class UserInterface {
         graphFrame.setLayout(new BorderLayout());
         graphFrame.getContentPane().add(view, BorderLayout.CENTER);
         graphFrame.add(topPanel, BorderLayout.NORTH);
-        graphFrame.add(bottomPanel, BorderLayout.SOUTH);
+        graphFrame.add(sidePanel, BorderLayout.EAST);
         this.createMenus();
         graphFrame.pack();
         graphFrame.setSize(java.awt.Toolkit.getDefaultToolkit().getScreenSize());
@@ -321,10 +326,13 @@ public class UserInterface {
         
         // construct the different save menu items
         //fileMenu_Open = new JMenuItem ("Open Input File");
-        fileMenu_Save = new JMenuItem ("Save Graph to JPG");
+        fileMenu_Save = new JMenuItem ("Save Graph as JPG");
         
         //construct session log viewer
-        fileMenu_sessionLog= new JMenuItem("View Session Log");
+        fileMenu_sessionLog = new JMenuItem("View Session Log");
+        
+        //construct help system viewer
+        fileMenu_help = new JMenuItem("Help");
         
         // build the algorithm menu      
         algMenu = new JMenu( ALG_MEN_STR );
@@ -366,6 +374,13 @@ public class UserInterface {
                 instantiateSaveDialog();
             }
         };
+        
+        ActionListener helpListener = new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                instantiateHelpDialog();
+            }
+        };
 
        /* ActionListener openListener = new ActionListener(){
             @Override
@@ -387,6 +402,7 @@ public class UserInterface {
         fileMenu_Save.addActionListener(saveListener);
         //fileMenu_Open.addActionListener(openListener);
         fileMenu_sessionLog.addActionListener(viewSessionLogListener);
+        fileMenu_help.addActionListener(helpListener);
         
 //        saveMenu_Save.addActionListener(saveListener);
         
@@ -399,6 +415,8 @@ public class UserInterface {
         fileMenu.add(fileMenu_Save);
         fileMenu.addSeparator();
         fileMenu.add(fileMenu_sessionLog);
+        fileMenu.addSeparator();
+        fileMenu.add(fileMenu_help);
         
         graphFrame.setJMenuBar(menuBar);    // set the menu bar
     }
@@ -499,7 +517,7 @@ public class UserInterface {
      /*
      * instantiateOpenDialog()
      * 
-     * Method for open code
+     * Method for displaying file opener dialogue at program instantiation
      */
     public File instantiateOpenDialog(){
         JFrame openFrame = new JFrame();
@@ -522,18 +540,63 @@ public class UserInterface {
         return selectedFile;
     }    
     
+    private void instantiateHelpDialog () {
+        if (Desktop.isDesktopSupported()) {
+            try {
+                 File myFile = new File("./UserManual.pdf");
+                 Desktop.getDesktop().open(myFile);
+            } catch (IOException ex) {
+        // no application registered for PDFs
+            }
+    }
+    }
+    
     private void getNodeInfo(String ID, JTextArea nodeInfo) {
         Integer Integer = new Integer(0);
-        int id = Integer.parseInt(ID);
+        int i, id = Integer.parseInt(ID);
+        int currID = 0, j = 0;
+        String infoNodeIP;
+        
+        if(id < 1 || id > nodeArray.length) {
+            nodeInfo.setText("Invalid Node ID: Out of Range");
+            logger.info(CLASS_NAME, "User entered invalid node ID");
+            return;
+        }
+        
         id = id - 1;
         
         nodeInfo.setText("");
-        
         nodeInfo.append("Node ID: " + nodeArray[id].getID() + "\n");
-        
         nodeInfo.append("IP Address: " + nodeArray[id].getIP() + "\n");
+        nodeInfo.append("Neighboring Nodes:\n");
         
+        infoNodeIP = nodeArray[id].getIP();
         
+        for(i=0; i<pathArray.length; i++) {
+            if(pathArray[i].getNodeAIP().equals(infoNodeIP)) {
+                for(j = 0; j<nodeArray.length; j++) {
+                    if(nodeArray[j].getIP().equals(pathArray[i].getNodeBIP())) {
+                        currID = nodeArray[j].getID();
+                        break;
+                    }
+                }
+                nodeInfo.append("   ID: " + currID + " IP Address: " + pathArray[i].getNodeBIP() + "\n");
+                nodeInfo.append("        Weight: " + pathArray[i].getWeight() + "\n");
+                nodeInfo.append("        Capacity: " + pathArray[i].getCapacity() + "\n");
+            }
+            else if(pathArray[i].getNodeBIP().equals(infoNodeIP)) {
+                for(j = 0; j<nodeArray.length; j++) {
+                    if(nodeArray[j].getIP().equals(pathArray[i].getNodeAIP())) {
+                        currID = nodeArray[j].getID();
+                        break;
+                    }
+                }
+                nodeInfo.append("   ID: " + currID + " IP Address: " + pathArray[i].getNodeAIP() + "\n");
+                nodeInfo.append("        Weight: " + pathArray[i].getWeight() + "\n");
+                nodeInfo.append("        Capacity: " + pathArray[i].getCapacity() + "\n");
+            }
+        }
+        nodeInfo.setCaretPosition(0);
     }
     
     public void initGui(){
@@ -741,7 +804,7 @@ public class UserInterface {
          */
         public int getSourceNodeIndex(){
             int ret = Integer.parseInt(sourceString);
-            if( ret < 1 ){
+            if( ret < 1 ) {
                 ret = 1;
             }
             return ret;

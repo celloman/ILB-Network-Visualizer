@@ -36,6 +36,8 @@ public class DataLogger {
     private static JScrollPane scrollPane;
     private static boolean logVisible = true;
     private static JButton hideLogButton;
+    private static JPanel buttonPanel;
+    private static boolean errorCondition;
     
     static {
         try {
@@ -45,8 +47,6 @@ public class DataLogger {
         
             // Create Scrolling Text Area
             logTextArea = new JTextArea(25, 50);
-            //logTextArea.setLineWrap(true);
-            //logTextArea.setWrapStyleWord(true);
             logTextArea.setEditable(false);
             scrollPane = new JScrollPane(logTextArea);
             scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -60,14 +60,14 @@ public class DataLogger {
                     hideLogger();
                 }
             });
-            JPanel buttonPanel = new JPanel();
+            buttonPanel = new JPanel();
             buttonPanel.add(hideLogButton);
             
             logFrame.getContentPane().add(scrollPane, BorderLayout.CENTER);
             logFrame.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
             logFrame.pack();
-//            logFrame.setVisible(false);
             
+            //settiing up log file
             boolean append = true;
             FileHandler fh = new FileHandler( log_file+log_file_type, append);
             fh.setFormatter(new Formatter() {   // set up the log file format
@@ -125,8 +125,10 @@ public class DataLogger {
     }
     
     public static void hideLogger() {
-        logVisible = false;
-        logFrame.setVisible(logVisible);
+        if(errorCondition == false){
+            logVisible = false;
+            logFrame.setVisible(logVisible);
+        }
     }
     
     public void showLogger() {
@@ -137,5 +139,27 @@ public class DataLogger {
         else {
             logFrame.setVisible(logVisible);
         }
+    }
+    
+    public void errorExit() {
+        JButton exitButton = new JButton("Exit");
+        exitButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    System.exit(-1);
+                }
+            });
+        buttonPanel.remove(hideLogButton);
+        buttonPanel.add(exitButton);
+        
+        logTextArea.append("*************************************\n");
+        logTextArea.append(" Critical Error Occured, Force Exit\n");
+        logTextArea.append("*************************************\n");
+        
+        logFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        logFrame.setVisible(true);   
+        logFrame.setAlwaysOnTop(true);
+        
+        errorCondition = true;
     }
 }

@@ -48,7 +48,7 @@ public class XMLSAXParser extends DefaultHandler {
         }
         else {
             logger.severe(CLASS_NAME, "Invalid input file, exiting program.");
-            System.exit(-1);
+            logger.errorExit();
         }
         logger.info(CLASS_NAME, "Starting parsing");
         parseDocument();
@@ -62,13 +62,13 @@ public class XMLSAXParser extends DefaultHandler {
             parser.parse(nodeXmlFilePath, this);
         } catch (ParserConfigurationException e) {
             logger.severe(CLASS_NAME, "ParserConfig error");
-            System.exit(-1);
+            logger.errorExit();
         } catch (SAXException e) {
             logger.severe(CLASS_NAME, "SAXException : xml not well formed");
-            System.exit(-1);
+            logger.errorExit();
         } catch (IOException e) {
             logger.severe(CLASS_NAME, "IO error");
-            System.exit(-1);
+            logger.errorExit();
         }
     }
     

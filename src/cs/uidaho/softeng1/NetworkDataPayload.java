@@ -264,7 +264,7 @@ public class NetworkDataPayload {
     private void errorExit( String msg ){
         if( logger == null ) return;
         logger.severe(CLASS_NAME, msg);
-        System.exit( -1 );
+        logger.errorExit();
     }
     
     

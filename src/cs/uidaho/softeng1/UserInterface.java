@@ -419,7 +419,6 @@ public class UserInterface {
         fileMenu.add(fileMenu_Save);
         fileMenu.addSeparator();
         fileMenu.add(fileMenu_sessionLog);
-        fileMenu.addSeparator();
         
         //Add User Manual to Help Menu
         helpMenu.add(helpMenu_usrManual);
@@ -551,7 +550,9 @@ public class UserInterface {
             try {
                  File myFile = new File("./UserManual.pdf");
                  if(!myFile.exists()) {
-                     logger.warning(CLASS_NAME, "User Manual Missing");
+                     logger.warning(CLASS_NAME, "**User Manual Missing from Program Directory**\n"
+                             + "*****************available at project website**************");
+                     logger.showLogger();
                      return;
                  }
                  Desktop.getDesktop().open(myFile);

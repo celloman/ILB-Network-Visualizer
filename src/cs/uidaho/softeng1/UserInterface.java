@@ -545,13 +545,15 @@ public class UserInterface {
         return selectedFile;
     }    
     
+    // Method for attempting to open User Manual (stored in program directory)
     private void instantiateHelpDialog () {
         if (Desktop.isDesktopSupported()) {
             try {
                  File myFile = new File("./UserManual.pdf");
                  if(!myFile.exists()) {
                      logger.warning(CLASS_NAME, "**User Manual Missing from Program Directory**\n"
-                             + "*****************available at project website**************");
+                             + "***************** UserManual.pdf should reside in " + System.getProperty("user.dir") + "\n"
+                             + "***************** available at project website **************");
                      logger.showLogger();
                      return;
                  }

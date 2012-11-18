@@ -65,10 +65,7 @@ public class UserInterface {
     //algorithm menu objects
     private static final String MAIN_MEN_STR = "Menu";
     private static final String ALG_MEN_STR = "Algorithms";
-<<<<<<< HEAD
-    //private static final String HELP_MEN_STR = "Help";
-=======
->>>>>>> 825d3fa3df16c3c30e5dab919830e8c6643df5f1
+    private static final String HELP_MEN_STR = "Help";
     private JMenuBar menuBar;   // the menu bar
     private JMenu algMenu;    // the algorithms menu
     private JMenuItem algMenu_unwPath, algMenu_wPath;   // the weighted/unweighted algorithm menu items
@@ -77,16 +74,13 @@ public class UserInterface {
     private static final String FILE_MEN_STR = "File";
     private JMenu fileMenu; // the save menu
     private JMenuItem fileMenu_Save;
-    //private JMenuItem fileMenu_Open;
+    private JMenuItem fileMenu_Open;
     private JMenuItem fileMenu_sessionLog;
-<<<<<<< HEAD
     
-    //private JMenu helpMenu;
-    //private JMenuItem helpMenu_usrManual;
+    private JMenu helpMenu;
+    private JMenuItem helpMenu_usrManual;
     
-=======
     private JMenuItem fileMenu_Quit;
->>>>>>> 825d3fa3df16c3c30e5dab919830e8c6643df5f1
     
     public UserInterface( DataLogger entry_logger, NetworkDataPayload net_data ){
         if( entry_logger == null ){
@@ -356,14 +350,11 @@ public class UserInterface {
         algMenu_unwPath = new JMenuItem( "Unweighted Shortest Path" ); 
         algMenu_wPath = new JMenuItem( "Weighted Shortest Path" );
         
-<<<<<<< HEAD
         //construct help system viewer
-        //helpMenu = new JMenu( HELP_MEN_STR );
-        //menuBar.add(helpMenu);
-        //helpMenu_usrManual = new JMenuItem("User Manual");
-        
-=======
->>>>>>> 825d3fa3df16c3c30e5dab919830e8c6643df5f1
+        helpMenu = new JMenu( HELP_MEN_STR );
+        menuBar.add(helpMenu);
+        helpMenu_usrManual = new JMenuItem("User Manual");
+
         /*
          * This sets up a keyboard shortcut, alt+2, but is disabled due
          * to conflicting with the dialog. The dialog input is catching
@@ -429,11 +420,10 @@ public class UserInterface {
         fileMenu_Save.addActionListener(saveListener);
         //fileMenu_Open.addActionListener(openListener);
         fileMenu_sessionLog.addActionListener(viewSessionLogListener);
-<<<<<<< HEAD
-        //helpMenu_usrManual.addActionListener(helpListener);
-=======
+
+        helpMenu_usrManual.addActionListener(helpListener);
+
         fileMenu_Quit.addActionListener(quitApplicationListener);
->>>>>>> 825d3fa3df16c3c30e5dab919830e8c6643df5f1
         
 //        saveMenu_Save.addActionListener(saveListener);
         
@@ -446,14 +436,11 @@ public class UserInterface {
         fileMenu.add(fileMenu_Save);
         fileMenu.addSeparator();
         fileMenu.add(fileMenu_sessionLog);
-<<<<<<< HEAD
         
         //Add User Manual to Help Menu
-        //helpMenu.add(helpMenu_usrManual);
-=======
+        helpMenu.add(helpMenu_usrManual);
         fileMenu.addSeparator();
         fileMenu.add(fileMenu_Quit);
->>>>>>> 825d3fa3df16c3c30e5dab919830e8c6643df5f1
         
         graphFrame.setJMenuBar(menuBar);    // set the menu bar
     }

@@ -64,7 +64,7 @@ public class UserInterface {
     
     private static final String MAIN_MEN_STR = "Menu";
     private static final String ALG_MEN_STR = "Algorithms";
-    private static final String HELP_MEN_STR = "Help";
+    //private static final String HELP_MEN_STR = "Help";
     private JMenuBar menuBar;   // the menu bar
     private JMenu algMenu;    // the algorithms menu
     private JMenuItem algMenu_unwPath, algMenu_wPath;   // the weighted/unweighted algorithm menu items
@@ -75,8 +75,8 @@ public class UserInterface {
     //private JMenuItem fileMenu_Open;
     private JMenuItem fileMenu_sessionLog;
     
-    private JMenu helpMenu;
-    private JMenuItem helpMenu_usrManual;
+    //private JMenu helpMenu;
+    //private JMenuItem helpMenu_usrManual;
     
     
     public UserInterface( DataLogger entry_logger, NetworkDataPayload net_data ){
@@ -345,9 +345,9 @@ public class UserInterface {
         algMenu_wPath = new JMenuItem( "Weighted Shortest Path" );
         
         //construct help system viewer
-        helpMenu = new JMenu( HELP_MEN_STR );
-        menuBar.add(helpMenu);
-        helpMenu_usrManual = new JMenuItem("User Manual");
+        //helpMenu = new JMenu( HELP_MEN_STR );
+        //menuBar.add(helpMenu);
+        //helpMenu_usrManual = new JMenuItem("User Manual");
         
         /*
          * This sets up a keyboard shortcut, alt+2, but is disabled due
@@ -406,7 +406,7 @@ public class UserInterface {
         fileMenu_Save.addActionListener(saveListener);
         //fileMenu_Open.addActionListener(openListener);
         fileMenu_sessionLog.addActionListener(viewSessionLogListener);
-        helpMenu_usrManual.addActionListener(helpListener);
+        //helpMenu_usrManual.addActionListener(helpListener);
         
 //        saveMenu_Save.addActionListener(saveListener);
         
@@ -421,7 +421,7 @@ public class UserInterface {
         fileMenu.add(fileMenu_sessionLog);
         
         //Add User Manual to Help Menu
-        helpMenu.add(helpMenu_usrManual);
+        //helpMenu.add(helpMenu_usrManual);
         
         graphFrame.setJMenuBar(menuBar);    // set the menu bar
     }

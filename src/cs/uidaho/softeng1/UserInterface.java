@@ -77,11 +77,6 @@ public class UserInterface {
     private JMenuItem fileMenu_sessionLog;
     private JMenuItem fileMenu_Quit;
     
-    //help menue objects
-    private static final String HELP_MEN_STR = "Help";
-    private JMenu helpMenu; // the help menu
-    private JMenuItem helpMenu_UserManual; //User Manual menu item
-    
     public UserInterface( DataLogger entry_logger, NetworkDataPayload net_data ){
         if( entry_logger == null ){
             throw new IllegalArgumentException( "Datalogger was not succesfully passed to the user interface" );
@@ -343,20 +338,12 @@ public class UserInterface {
         // build the algorithm menu      
         algMenu = new JMenu( ALG_MEN_STR );
         algMenu.setMnemonic(KeyEvent.VK_A);
-        algMenu.getAccessibleContext().setAccessibleDescription(
-                "Algorithm Menu");
+        algMenu.getAccessibleContext().setAccessibleDescription("Algorithm Menu");
         menuBar.add(algMenu);
         
         // construct the different algorithm menu items
         algMenu_unwPath = new JMenuItem( "Unweighted Shortest Path" ); 
         algMenu_wPath = new JMenuItem( "Weighted Shortest Path" );
-        
-        //build help menu
-        helpMenu = new JMenu( HELP_MEN_STR );
-        helpMenu.getAccessibleContext().setAccessibleDescription("Help Menu");
-        menuBar.add(helpMenu);
-        
-        helpMenu_UserManual = new JMenuItem("User Manual");
         
         /*
          * This sets up a keyboard shortcut, alt+2, but is disabled due
@@ -424,7 +411,6 @@ public class UserInterface {
         //fileMenu_Open.addActionListener(openListener);
         fileMenu_sessionLog.addActionListener(viewSessionLogListener);
         fileMenu_Quit.addActionListener(quitApplicationListener);
-        helpMenu_UserManual.addActionListener(helpListener);
         
 //        saveMenu_Save.addActionListener(saveListener);
         
@@ -439,7 +425,6 @@ public class UserInterface {
         fileMenu.add(fileMenu_sessionLog);
         fileMenu.addSeparator();
         fileMenu.add(fileMenu_Quit);
-        helpMenu.add(helpMenu_UserManual);
         
         graphFrame.setJMenuBar(menuBar);    // set the menu bar
     }
@@ -563,15 +548,25 @@ public class UserInterface {
         return selectedFile;
     }    
     
+    // Method for attempting to open User Manual (stored in program directory)
     private void instantiateHelpDialog () {
         if (Desktop.isDesktopSupported()) {
             try {
                  File myFile = new File("./UserManual.pdf");
+                 if(!myFile.exists()) {
+                     logger.warning(CLASS_NAME, "**User Manual Missing from Program Directory**\n"
+                             + "***************** UserManual.pdf should reside in " + System.getProperty("user.dir") + "\n"
+                             + "***************** available at project website **************");
+                     logger.showLogger();
+                     return;
+                 }
                  Desktop.getDesktop().open(myFile);
+                 logger.info(CLASS_NAME, "User accessed user manual");
             } catch (IOException ex) {
-        // no application registered for PDFs
+                // no application registered for PDFs
+                logger.warning(CLASS_NAME, "User does not have appropriate pdf reader installed");
             }
-    }
+        }
     }
     
     private void getNodeInfo(String ID, JTextArea nodeInfo) {

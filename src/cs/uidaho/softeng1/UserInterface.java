@@ -62,22 +62,20 @@ public class UserInterface {
     private VisualizationViewer<NetworkNode, NetworkPath> view; 
     private JFrame graphFrame;
     
+    //algorithm menu objects
     private static final String MAIN_MEN_STR = "Menu";
     private static final String ALG_MEN_STR = "Algorithms";
-    private static final String HELP_MEN_STR = "Help";
     private JMenuBar menuBar;   // the menu bar
     private JMenu algMenu;    // the algorithms menu
     private JMenuItem algMenu_unwPath, algMenu_wPath;   // the weighted/unweighted algorithm menu items
     
+    //file menu objects
     private static final String FILE_MEN_STR = "File";
     private JMenu fileMenu; // the save menu
     private JMenuItem fileMenu_Save;
     //private JMenuItem fileMenu_Open;
     private JMenuItem fileMenu_sessionLog;
-    
-    private JMenu helpMenu;
-    private JMenuItem helpMenu_usrManual;
-    
+    private JMenuItem fileMenu_Quit;
     
     public UserInterface( DataLogger entry_logger, NetworkDataPayload net_data ){
         if( entry_logger == null ){
@@ -334,6 +332,9 @@ public class UserInterface {
         //construct session log viewer
         fileMenu_sessionLog = new JMenuItem("View Session Log");
         
+        //construct help system viewer
+        fileMenu_Quit = new JMenuItem("Quit");
+        
         // build the algorithm menu      
         algMenu = new JMenu( ALG_MEN_STR );
         algMenu.setMnemonic(KeyEvent.VK_A);
@@ -343,11 +344,6 @@ public class UserInterface {
         // construct the different algorithm menu items
         algMenu_unwPath = new JMenuItem( "Unweighted Shortest Path" ); 
         algMenu_wPath = new JMenuItem( "Weighted Shortest Path" );
-        
-        //construct help system viewer
-        helpMenu = new JMenu( HELP_MEN_STR );
-        menuBar.add(helpMenu);
-        helpMenu_usrManual = new JMenuItem("User Manual");
         
         /*
          * This sets up a keyboard shortcut, alt+2, but is disabled due
@@ -400,13 +396,21 @@ public class UserInterface {
             }
         };
         
+        ActionListener quitApplicationListener = new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                logger.info(CLASS_NAME, "File > Quit menu item selected, Exiting Application");
+                System.exit(0);
+            }
+        };
+                
         // add the menu item listeners so the menu knows what to do when an item is selected
         algMenu_unwPath.addActionListener(algUnwListener);
         algMenu_wPath.addActionListener(algWListener);
         fileMenu_Save.addActionListener(saveListener);
         //fileMenu_Open.addActionListener(openListener);
         fileMenu_sessionLog.addActionListener(viewSessionLogListener);
-        helpMenu_usrManual.addActionListener(helpListener);
+        fileMenu_Quit.addActionListener(quitApplicationListener);
         
 //        saveMenu_Save.addActionListener(saveListener);
         
@@ -419,9 +423,8 @@ public class UserInterface {
         fileMenu.add(fileMenu_Save);
         fileMenu.addSeparator();
         fileMenu.add(fileMenu_sessionLog);
-        
-        //Add User Manual to Help Menu
-        helpMenu.add(helpMenu_usrManual);
+        fileMenu.addSeparator();
+        fileMenu.add(fileMenu_Quit);
         
         graphFrame.setJMenuBar(menuBar);    // set the menu bar
     }
@@ -568,15 +571,26 @@ public class UserInterface {
     
     private void getNodeInfo(String ID, JTextArea nodeInfo) {
         Integer Integer = new Integer(0);
-        int i, id = Integer.parseInt(ID);
+        int i, id;
         int currID = 0, j = 0;
         String infoNodeIP;
         
-        if(id < 1 || id > nodeArray.length) {
-            nodeInfo.setText("Invalid Node ID: Out of Range");
-            logger.info(CLASS_NAME, "User entered invalid node ID");
+        try {
+            id = Integer.parseInt(ID);
+        }
+        catch(NumberFormatException e) {
+            nodeInfo.setText("Invalid Node ID: Must Be A Number");
+            logger.info(CLASS_NAME, "Non-Integer entered for ID quary in Get Node Info");
             return;
         }
+        
+        if(id < 1 || id > nodeArray.length) {
+            nodeInfo.setText("Invalid Node ID: Out of Range");
+            logger.info(CLASS_NAME, "User entered invalid node ID in Get Node Info");
+            return;
+        }
+        
+        
         
         id = id - 1;
         
@@ -612,6 +626,8 @@ public class UserInterface {
             }
         }
         nodeInfo.setCaretPosition(0);
+        
+        logger.info(CLASS_NAME, "Successful Node ID query");
     }
     
     public void initGui(){

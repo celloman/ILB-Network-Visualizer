@@ -1,1 +1,3 @@
 log_file*.txt*
+nbproject/
+build/

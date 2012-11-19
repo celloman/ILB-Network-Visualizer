@@ -111,7 +111,7 @@ public class NetworkDataPayload {
     /*
      * 
      */
-    public void pipeToGrahp(Graph<NetworkNode, NetworkPath> netGraph){
+    public void pipeToGraph(Graph<NetworkNode, NetworkPath> netGraph){
         if( netGraph == null ) errorExit("Failed to pipe data to graph, netGraph is null");
         
         logger.info(CLASS_NAME, "Attempting to generate the graph edges and nodes");

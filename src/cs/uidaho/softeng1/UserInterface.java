@@ -111,17 +111,22 @@ public class UserInterface {
         
         File inputFile = instantiateOpenDialog();
         
+        // Parse input file
         parser = new XMLSAXParser(netdata, logger, inputFile.getPath());
 
+        // Show the logger on screen so user can tell program is working
         logger.showLogger();
         
         netdata.processNodes();        
         
-        netdata.pipeToGrahp(netGraph);
+        // Create graph
+        netdata.pipeToGraph(netGraph);
         
+        // Set global arrays of nodes and edges for future use
         nodeArray = netdata.getNodeArray();
         pathArray = netdata.getPathArray();
         
+        // save size of graph for future use
         nodeCount = nodeArray.length;
         edgeCount = pathArray.length;
         
@@ -160,8 +165,9 @@ public class UserInterface {
         JButton resetButton = new JButton("Reset");
         JButton ntButton = new JButton("Toggle Labels");
         
-        //give buttons an action
-        //reset graph
+        // Assign buttons their respective actions
+        
+        // Reset graph
         resetButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -221,6 +227,7 @@ public class UserInterface {
         JPanel topPanel = new JPanel();
         JPanel utilityPanel = new JPanel(new GridLayout(1, 3, 10, 10));
         
+        //Panel for node information sidebar
         JPanel sidePanel = new JPanel(new BorderLayout());
         sidePanel.setPreferredSize(new Dimension(250, this.HEIGHT));
         sidePanel.setOpaque(true);
@@ -238,6 +245,7 @@ public class UserInterface {
         nodeInfoEntry.add(nodeInfo, BorderLayout.NORTH);
         sideTopPanel.setBorder(BorderFactory.createLineBorder(Color.black));
         
+        //Text Field for entering node ID to request information of
         nodeNumber = new JTextField(8);
         nodeInfoEntry.add(nodeNumber, BorderLayout.CENTER);
         
@@ -256,8 +264,8 @@ public class UserInterface {
         graphInfoTextArea.setBorder(null);
         
         //add static graph info to text area
-        graphInfoTextArea.append("Number of Nodes in Graph: " + nodeArray.length + "\n");
-        graphInfoTextArea.append("Number of Paths in Graph: " + pathArray.length + "\n"); 
+        graphInfoTextArea.append("Number of Nodes in Graph: " + nodeCount + "\n");
+        graphInfoTextArea.append("Number of Paths in Graph: " + edgeCount + "\n"); 
         graphInfoTextArea.setEditable(false);
         graphInfo.setVisible(true);
         graphInfo.setBackground(Color.WHITE);
@@ -282,6 +290,7 @@ public class UserInterface {
         utilityPanel.add(modeBox);
         utilityPanel.add(ntButton);
         
+        // Action Listener for getting requested node info
         ActionListener getNodeInfoListener = new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -359,7 +368,7 @@ public class UserInterface {
         /*
          * This sets up a keyboard shortcut, alt+2, but is disabled due
          * to conflicting with the dialog. The dialog input is catching
-         * the '2' character from the alt-2 shortcut, I will address this.
+         * the '2' character from the alt-2 shortcut.
          */
         //algMenu_unwPath.setAccelerator(KeyStroke.getKeyStroke(
          //   KeyEvent.VK_2, ActionEvent.ALT_MASK));
@@ -491,32 +500,38 @@ public class UserInterface {
      /*
      * instantiateSaveDialog()
      * 
-     * Method for save code
+     * Method for saving the graph in its current state to a jpg image
+     * Saves a jpg of the same size as the viewer window to a path specified
+     * by the user in a file dialogue
      */
     private void instantiateSaveDialog(){
         logger.info(CLASS_NAME, "Saving Graph as JPG");
         
         view.setDoubleBuffered(false);
         
+        // Determine size of viewer window
         int width = view.getWidth();
         int height = view.getHeight();
         
+        // Set up file browser for user to specify path for saved file
         JFrame saveFrame = new JFrame();
         JFileChooser fileDialog = new JFileChooser(".");
         int saveChoice = fileDialog.showSaveDialog(saveFrame);        
         File selectedFile = null;
         
-        
+        // If user clicks save, get user's selected file
         if (saveChoice == JFileChooser.APPROVE_OPTION)
         {
             selectedFile = fileDialog.getSelectedFile();
         }
 
+        // Create the image
         BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics2D graphics = bi.createGraphics();
         view.paint(graphics);
         graphics.dispose();
         
+        // Attempt to write the image to disk at specified location
         try {
              ImageIO.write(bi, "jpg", selectedFile);
              logger.info(CLASS_NAME, "Successfully created JPG image of graph");
@@ -531,6 +546,8 @@ public class UserInterface {
      * instantiateOpenDialog()
      * 
      * Method for displaying file opener dialogue at program instantiation
+     * Allows the user to select a file other than the default
+     * If user presses cancel, a default file is opened
      */
     public File instantiateOpenDialog(){
         JFrame openFrame = new JFrame();
@@ -596,7 +613,7 @@ public class UserInterface {
         }
         
         //see if id is in range
-        if(id < 1 || id > nodeArray.length) {
+        if(id < 1 || id > nodeCount) {
             nodeInfo.setText("Invalid Node ID: Out of Range");
             logger.info(CLASS_NAME, "Out of range node ID entered in Get Node Info: \"" + ID + "\"");
             return;
@@ -614,9 +631,9 @@ public class UserInterface {
         infoNodeIP = nodeArray[id].getIP();
         
         //find node's neighbor information
-        for(i=0; i<pathArray.length; i++) {
+        for(i=0; i<edgeCount; i++) {
             if(pathArray[i].getNodeAIP().equals(infoNodeIP)) {
-                for(j = 0; j<nodeArray.length; j++) {
+                for(j = 0; j < nodeCount; j++) {
                     if(nodeArray[j].getIP().equals(pathArray[i].getNodeBIP())) {
                         currID = nodeArray[j].getID();
                         break;
@@ -627,12 +644,13 @@ public class UserInterface {
                 nodeInfo.append("        Capacity: " + pathArray[i].getCapacity() + "\n");
             }
             else if(pathArray[i].getNodeBIP().equals(infoNodeIP)) {
-                for(j = 0; j<nodeArray.length; j++) {
+                for(j = 0; j < nodeCount; j++) {
                     if(nodeArray[j].getIP().equals(pathArray[i].getNodeAIP())) {
                         currID = nodeArray[j].getID();
                         break;
                     }
                 }
+                // Add current node info to screen
                 nodeInfo.append("   ID: " + currID + " IP Address: " + pathArray[i].getNodeAIP() + "\n");
                 nodeInfo.append("        Weight: " + pathArray[i].getWeight() + "\n");
                 nodeInfo.append("        Capacity: " + pathArray[i].getCapacity() + "\n");

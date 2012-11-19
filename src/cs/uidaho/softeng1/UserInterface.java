@@ -1,10 +1,10 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * This class generates a graph from an input XML file, constructs the graph layout,
+ * and outputs the GUI for users to work with.
  */
 package cs.uidaho.softeng1;
 
-import edu.uci.ics.jung.algorithms.layout.FRLayout;
+import edu.uci.ics.jung.algorithms.layout.ISOMLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.algorithms.layout.util.Relaxer;
 import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
@@ -101,14 +101,8 @@ public class UserInterface {
     }
         
     /**
-     * This creates an example graph with some interconnecting nodes some with different weights to test the algorithms
-     * 
-     * We still need some method of keeping track of the node connections
-     * For example: how will we know when node1 has already been connected to node2
-     * when node1 and node2 say they are connected to each other specified from the input file,
-     * we don't want to have two connections
-     * since this is undirected
-     * Dan has this part still
+     * This sets up the graph, calling the XML parser and generates graph datt
+     * from the input file.
      */
     private void constructGraph(){
         logger.info(CLASS_NAME, "Generating Graph");
@@ -134,11 +128,18 @@ public class UserInterface {
         logger.info(CLASS_NAME, "Graph Generation Complete");
     }
     
+    /**
+     * This constructs the layout of the graph from the graph data, and creates the 
+     * GUI for the user to work with.
+     */
     private void construcLayout(){
         logger.info(CLASS_NAME, "Constructing Graph Layout");
+        
+        /* Keep commented layouts for later use */
         //graphLayout = new CircleLayout<>(this.netGraph);
         //graphLayout = new KKLayout<>(this.netGraph);
-        graphLayout = new FRLayout<>(this.netGraph);
+        //graphLayout = new FRLayout<>(this.netGraph);
+        graphLayout = new ISOMLayout<>(this.netGraph);
         graphLayout.setSize(java.awt.Toolkit.getDefaultToolkit().getScreenSize());
         
          //Graph visualizer
@@ -172,7 +173,7 @@ public class UserInterface {
                         relaxer.prerelax();
                         relaxer.relax();
                     } 
-                    logger.info(CLASS_NAME, "Reset Visualizer");
+                    logger.info(CLASS_NAME, "Resetting Visualizer");
                 }
             });
         //toggle edge/pathnames
@@ -181,7 +182,7 @@ public class UserInterface {
                 public void actionPerformed(ActionEvent e) {
                     //if labels are already set, remove
                     if( setLabels ) {
-                        logger.info(CLASS_NAME, "Removed Labels");
+                        logger.info(CLASS_NAME, "Removing Labels");
                         //remove vertext labels
                         view.getRenderContext().setVertexLabelTransformer(new Transformer<NetworkNode, String>() {
                         @Override
@@ -202,7 +203,7 @@ public class UserInterface {
                         setLabels = false;
                     }
                     else {
-                        logger.info(CLASS_NAME, "Placed Labels");
+                        logger.info(CLASS_NAME, "Placing Labels");
                         //place labels back on graph
                         view.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
                         view.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller());
@@ -244,12 +245,10 @@ public class UserInterface {
         sideTopPanel.add(getNodeInfo, BorderLayout.SOUTH);
         
         // Panel for other node information to go in
-        //JPanel bottomRightPanel = new JPanel(new BorderLayout());
         JPanel sideBottomPanel = new JPanel(new BorderLayout());//new GridLayout(2,1));
         sideBottomPanel.setPreferredSize(new Dimension(250, (this.HEIGHT)/2));
         sideBottomPanel.setOpaque(true);
         sideBottomPanel.setBackground(Color.WHITE);
-        //bottomRightPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
                
         // Create Overall graph info panel
         JPanel graphInfo = new JPanel();
@@ -274,8 +273,6 @@ public class UserInterface {
         JScrollPane scrollingNodeInfo = new JScrollPane(extraNodeInfo);
         scrollingNodeInfo.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollingNodeInfo.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        //extraNodeInfo.setBorder(BorderFactory.createLineBorder(Color.black));
-        //bottomRightPanel.add(extraNodeInfo);
         sideBottomPanel.add(scrollingNodeInfo);
         sideBottomPanel.add(graphInfo, BorderLayout.SOUTH);
         
@@ -321,7 +318,11 @@ public class UserInterface {
         graphFrame.setVisible(true);
     }
     
+    /**
+     * This creates all of the menus to be used in the GUI.
+     */
     private void createMenus(){
+        logger.info(CLASS_NAME, "Creating menus");
         // create the menu bar
         menuBar = new JMenuBar();
         
@@ -392,13 +393,6 @@ public class UserInterface {
             }
         };
 
-       /* ActionListener openListener = new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                instantiateOpenDialog();
-            }
-        };*/
-        
         ActionListener viewSessionLogListener = new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -418,21 +412,16 @@ public class UserInterface {
         algMenu_unwPath.addActionListener(algUnwListener);
         algMenu_wPath.addActionListener(algWListener);
         fileMenu_Save.addActionListener(saveListener);
-        //fileMenu_Open.addActionListener(openListener);
         fileMenu_sessionLog.addActionListener(viewSessionLogListener);
 
         helpMenu_usrManual.addActionListener(helpListener);
 
         fileMenu_Quit.addActionListener(quitApplicationListener);
         
-//        saveMenu_Save.addActionListener(saveListener);
-        
         // add the menu items
         algMenu.add(algMenu_unwPath);
         algMenu.addSeparator();
         algMenu.add(algMenu_wPath);
-        //fileMenu.add(fileMenu_Open);
-        //fileMenu.addSeparator();
         fileMenu.add(fileMenu_Save);
         fileMenu.addSeparator();
         fileMenu.add(fileMenu_sessionLog);
@@ -505,7 +494,7 @@ public class UserInterface {
      * Method for save code
      */
     private void instantiateSaveDialog(){
-        
+        logger.info(CLASS_NAME, "Saving Graph as JPG");
         
         view.setDoubleBuffered(false);
         
@@ -532,8 +521,8 @@ public class UserInterface {
              ImageIO.write(bi, "jpg", selectedFile);
              logger.info(CLASS_NAME, "Successfully created JPG image of graph");
         } catch (Exception e) {
-             e.printStackTrace();
              logger.severe(CLASS_NAME, "Error creating image: exception thrown while writing JPG");
+             logger.showLogger();
         }  
         view.setDoubleBuffered(true);
     }
@@ -564,7 +553,9 @@ public class UserInterface {
         return selectedFile;
     }    
     
-    // Method for attempting to open User Manual (stored in program directory)
+    /*
+     * Method for attempting to open User Manual (stored in program directory)
+    */
     private void instantiateHelpDialog () {
         if (Desktop.isDesktopSupported()) {
             try {
@@ -585,24 +576,29 @@ public class UserInterface {
         }
     }
     
+    /*
+     * retrieves information about specified node
+    */
     private void getNodeInfo(String ID, JTextArea nodeInfo) {
         Integer Integer = new Integer(0);
         int i, id;
         int currID = 0, j = 0;
         String infoNodeIP;
         
+        //check if ID is an integer, if so convert
         try {
             id = Integer.parseInt(ID);
         }
         catch(NumberFormatException e) {
-            nodeInfo.setText("Invalid Node ID: Must Be A Number");
-            logger.info(CLASS_NAME, "Non-Integer entered for ID quary in Get Node Info");
+            nodeInfo.setText("Invalid Node ID: \"" + ID + "\"");
+            logger.info(CLASS_NAME, "Non-Integer entered for ID quary in Get Node Info: \"" + ID + "\"");
             return;
         }
         
+        //see if id is in range
         if(id < 1 || id > nodeArray.length) {
             nodeInfo.setText("Invalid Node ID: Out of Range");
-            logger.info(CLASS_NAME, "User entered invalid node ID in Get Node Info");
+            logger.info(CLASS_NAME, "Out of range node ID entered in Get Node Info: \"" + ID + "\"");
             return;
         }
         
@@ -617,6 +613,7 @@ public class UserInterface {
         
         infoNodeIP = nodeArray[id].getIP();
         
+        //find node's neighbor information
         for(i=0; i<pathArray.length; i++) {
             if(pathArray[i].getNodeAIP().equals(infoNodeIP)) {
                 for(j = 0; j<nodeArray.length; j++) {
@@ -643,9 +640,12 @@ public class UserInterface {
         }
         nodeInfo.setCaretPosition(0);
         
-        logger.info(CLASS_NAME, "Successful Node ID query");
+        logger.info(CLASS_NAME, "Successful Node ID \"" + ID + "\" query");
     }
     
+    /*
+     * Initializes GUI, this is the UserInterface initializaiton method
+     */
     public void initGui(){
         this.constructGraph();
         this.construcLayout();        

@@ -4,7 +4,6 @@
  */
 package cs.uidaho.softeng1;
 
-import java.io.File;
 import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -47,10 +46,10 @@ public class XMLSAXParser extends DefaultHandler {
             this.nodeXmlFilePath = inputFilePath;
         }
         else {
-            logger.severe(CLASS_NAME, "Invalid input file, exiting program.");
+            logger.severe(CLASS_NAME, "Invalid input file \"" + inputFilePath + "\", exiting program.");
             logger.errorExit();
         }
-        logger.info(CLASS_NAME, "Starting parsing");
+        logger.info(CLASS_NAME, "Starting parser on: \"" + inputFilePath + "\"");
         parseDocument();
     }
     
@@ -137,7 +136,7 @@ public class XMLSAXParser extends DefaultHandler {
     
     @Override
     public void endDocument(){
-        logger.info(CLASS_NAME, "End of XML file, calling processNodes");
+        logger.info(CLASS_NAME, "End of XML file");
         netdata.processNodes();
     }
     

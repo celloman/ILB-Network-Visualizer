@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<doc>
+    <node>
+        <id>10.0.0.1</id>
+        <neighbor ip="10.0.0.14">
+            <weight>1.34</weight>
+            <capacity>1.52</capacity>
+        </neighbor>
+    </node>
+    <node>
+        <id>10.0.0.2</id>
+        <neighbor ip="10.0.0.1">
+            <weight>2.0</weight>
+            <capacity>2.28</capacity>
+        </neighbor>
+        <neighbor ip="10.0.0.10">
+            <weight>0.55</weight>
+            <capacity>0.9</capacity>
+        </neighbor>
+        <neighbor ip="10.0.0.12">
+            <weight>0.15</weight>
+            <capacity>0.11</capacity>
+        </neighbor>
+        <neighbor ip="10.0.0.11">
+            <weight>2.13</weight>
+            <capacity>0.11</capacity>
+        </neighbor>
+    </node>
+    <node>
+        <id>10.0.0.3</id>
+        <neighbor ip="10.0.0.11">
+            <weight>0.39</weight>
+            <capacity>2.01</capacity>
+        </neighbor>
+        <neighbor ip="10.0.0.14">
+            <weight>1.69</weight>
+            <capacity>2.17</capacity>
+        </neighbor>
+        <neighbor ip="10.0.0.8">
+            <weight>0.36</weight>
+            <capacity>1.03</capacity>
+        </neighbor>
+    </node>
+    <node>
+        <id>10.0.0.4</id>
+        <neighbor ip="10.0.0.10">
+            <weight>2.48</weight>
+            <capacity>1.44</capacity>
+        </neighbor>
+        <neighbor ip="10.0.0.15">
+            <weight>0.54</weight>
+            <capacity>2.65</capacity>
+        </neighbor>
+        <neighbor ip="10.0.0.14">
+            <weight>1.63</weight>
+            <capacity>0.36</capacity>
+        </neighbor>
+    </node>
+    <node>
+        <id>10.0.0.5</id>
+        <neighbor ip="10.0.0.1">
+            <weight>0.77</weight>
+            <capacity>1.4</capacity>
+        </neighbor>
+    </node>
+    <node>
+        <id>10.0.0.6</id>
+        <neighbor ip="10.0.0.8">
+            <weight>0.69</weight>
+            <capacity>2.92</capacity>
+        </neighbor>
+        <neighbor ip="10.0.0.5">
+            <weight>2.2</weight>
+            <capacity>2.06</capacity>
+        </neighbor>
+        <neighbor ip="10.0.0.7">
+            <weight>0.79</weight>
+            <capacity>2.53</capacity>
+        </neighbor>
+    </node>
+    <node>
+        <id>10.0.0.7</id>
+        <neighbor ip="10.0.0.10">
+            <weight>0.45</weight>
+            <capacity>1.67</capacity>
+        </neighbor>
+    </node>
+    <node>
+        <id>10.0.0.8</id>
+        <neighbor ip="10.0.0.12">
+            <weight>2.85</weight>
+            <capacity>0.62</capacity>
+        </neighbor>
+        <neighbor ip="10.0.0.4">
+            <weight>2.16</weight>
+            <capacity>2.79</capacity>
+        </neighbor>
+    </node>
+    <node>
+        <id>10.0.0.9</id>
+        <neighbor ip="10.0.0.13">
+            <weight>2.15</weight>
+            <capacity>0.28</capacity>
+        </neighbor>
+        <neighbor ip="10.0.0.8">
+            <weight>1.13</weight>
+            <capacity>2.87</capacity>
+        </neighbor>
+        <neighbor ip="10.0.0.15">
+            <weight>2.57</weight>
+            <capacity>2.41</capacity>
+        </neighbor>
+    </node>
+    <node>
+        <id>10.0.0.10</id>
+        <neighbor ip="10.0.0.15">
+            <weight>1.67</weight>
+            <capacity>0.52</capacity>
+        </neighbor>
+    </node>
+    <node>
+        <id>10.0.0.11</id>
+        <neighbor ip="10.0.0.8">
+            <weight>0.36</weight>
+            <capacity>1.26</capacity>
+        </neighbor>
+    </node>
+    <node>
+        <id>10.0.0.12</id>
+        <neighbor ip="10.0.0.11">
+            <weight>2.78</weight>
+            <capacity>1.01</capacity>
+        </neighbor>
+    </node>
+    <node>
+        <id>10.0.0.13</id>
+        <neighbor ip="10.0.0.2">
+            <weight>1.13</weight>
+            <capacity>1.48</capacity>
+        </neighbor>
+        <neighbor ip="10.0.0.1">
+            <weight>2.99</weight>
+            <capacity>2.86</capacity>
+        </neighbor>
+    </node>
+    <node>
+        <id>10.0.0.14</id>
+        <neighbor ip="10.0.0.1">
+            <weight>1.62</weight>
+            <capacity>1.63</capacity>
+        </neighbor>
+        <neighbor ip="10.0.0.3">
+            <weight>1.18</weight>
+            <capacity>0.76</capacity>
+        </neighbor>
+        <neighbor ip="10.0.0.12">
+            <weight>2.78</weight>
+            <capacity>0.26</capacity>
+        </neighbor>
+        <neighbor ip="10.0.0.8">
+            <weight>1.59</weight>
+            <capacity>2.59</capacity>
+        </neighbor>
+        <neighbor ip="10.0.0.7">
+            <weight>0.71</weight>
+            <capacity>1.86</capacity>
+        </neighbor>
+    </node>
+    <node>
+        <id>10.0.0.15</id>
+        <neighbor ip="10.0.0.2">
+            <weight>0.68</weight>
+            <capacity>2.83</capacity>
+        </neighbor>
+        <neighbor ip="10.0.0.1">
+            <weight>1.43</weight>
+            <capacity>2.1</capacity>
+        </neighbor>
+        <neighbor ip="10.0.0.5">
+            <weight>2.65</weight>
+            <capacity>0.92</capacity>
+        </neighbor>
+    </node>
+</doc>

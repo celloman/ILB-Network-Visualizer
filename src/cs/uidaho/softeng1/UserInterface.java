@@ -29,7 +29,7 @@ import org.apache.commons.collections15.Transformer;
 
 /**
  *
- * @author Jon
+ * @author Jon, Everett, Pierce
  */
 public class UserInterface {
     private static final String CLASS_NAME = "UserInterface";
@@ -564,7 +564,7 @@ public class UserInterface {
         else
         {
             selectedFile = new File("nodes.xml");
-            logger.info(CLASS_NAME, "Default input file specified (input.xml)");
+            logger.info(CLASS_NAME, "Default input file specified (nodes.xml)");
         }
         
         return selectedFile;
@@ -588,7 +588,9 @@ public class UserInterface {
                  logger.info(CLASS_NAME, "User accessed user manual");
             } catch (IOException ex) {
                 // no application registered for PDFs
-                logger.warning(CLASS_NAME, "User does not have appropriate pdf reader installed");
+                logger.warning(CLASS_NAME, "***************** User does not have appropriate pdf reader installed **************");
+                logger.warning(CLASS_NAME, "***************** UserManual.pdf is located in " + System.getProperty("user.dir") + " ****************");
+                logger.showLogger();
             }
         }
     }

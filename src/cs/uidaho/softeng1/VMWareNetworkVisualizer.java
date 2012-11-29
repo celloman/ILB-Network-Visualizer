@@ -10,7 +10,7 @@ import java.io.File;
  *
  * @author Jon
  */
-public class Entry {
+public class VMWareNetworkVisualizer {
     private static final String CLASS_NAME = "Entry";
     private static final int EXIT_SUCCESS = 0;
     
@@ -29,13 +29,6 @@ public class Entry {
         netdata = new NetworkDataPayload( logger );
         netstats = new NetworkAnalyzer( logger , netdata);
         gui = new UserInterface( logger , netdata );
-        
-//        File inputFile = gui.instantiateOpenDialog();
-//        logger.showLogger();
-        
-        //test the logging
-        //logger.info( CLASS_NAME, "Hey this is a debug message");
-        //logger.severe( CLASS_NAME, "Ah no more beer, severe situation!");
         
         logger.info(CLASS_NAME, "Starting the JUNG goodness...");
         gui.initGui();

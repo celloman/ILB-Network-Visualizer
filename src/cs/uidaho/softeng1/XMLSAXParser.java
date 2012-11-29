@@ -17,7 +17,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  *
- * @author kato
+ * @author Dan
  */
 public class XMLSAXParser extends DefaultHandler {
 
